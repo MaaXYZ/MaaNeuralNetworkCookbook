@@ -4,19 +4,33 @@ from pathlib import Path
 from collections import defaultdict
 from PIL import Image
 import torch
+import time
+
+################
+# 这部分需要根据项目实际情况修改
 
 # 数据集所在目录
 cwd = Path(__file__).parent
 TRAIN_PATH = cwd / "data" / "train"
 TEST_PATH = cwd / "data" / "test"
 OUTPUT_PATH = cwd / "data" / "model"
-# 可根据内存/显存大小调整 batch_size，一般来说越大越快
-BATCH_SIZE = 64
-# 线性层输入，这个要计算的，有点复杂，先不用管，后面会报错，然后它会告诉你正确的是多少
-GOOGLENET_LINEAR = 140800
 
+# 数据有哪些，这里的顺序也对应最终输出的顺序
+LABELS = ["dog", "cat", "bird"]
+
+# 一般来说越大越快，但太大会爆显存/内存
+BATCH_SIZE = 1024
+
+# 线性层输入，这个要计算的，有点复杂，先不用管，后面会报错，然后它会告诉你正确的是多少
+# 例如报错：RuntimeError: mat1 and mat2 shapes cannot be multiplied (1024x2200 and 1000x3)
+# 需要改成这里的 mat1.shape[1] 即 2200
+GOOGLENET_LINEAR = 2200
+
+# 再后面的代码有兴趣可以看看，不改也行
+################
 
 class MyDataset(Dataset):
+
     def __init__(self, path: Path):
         super().__init__()
 
@@ -39,20 +53,25 @@ class MyDataset(Dataset):
         for f in path.glob("*.png"):
             # 如果你的文件名不是这种格式，请自行修改此处代码
             label = f.stem.split("-")[0]
+            if label not in LABELS:
+                print(f"Unknown label: {label}")
+
+            self.labels[label] += 1
 
             # pytorch 实际会调用 __len__ 和 __getitem__
             # 如果内存不够，改为在 __getitem__ 再读文件即可
             image = Image.open(f).convert("RGB")
 
+            label = LABELS.index(label)
+
             self.data.append((image, label))
-            self.labels[label] += 1
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
         image, label = self.data[idx]
-        return (self.transform(image), label)
+        return self.transform(image), label
 
 
 train_data = MyDataset(TRAIN_PATH)
@@ -95,14 +114,14 @@ def train(epoch: int):
     for batch_idx, (data, target) in enumerate(train_loader):
 
         # 将数据移到 GPU/CPU
-        data = data.to(device)
+        data, target = data.to(device), target.to(device)
 
         # 梯度归零
         optimizer.zero_grad()
 
+        # 前馈
         # 自动混合精度
         with autocast(device_type):
-            # 前馈
             ## 计算 y_pred
             output = model(data)
             ## 计算损失
@@ -130,11 +149,11 @@ def test():
         for data, target in test_loader:
 
             # 将数据移到 GPU/CPU
-            data = data.to(device)
+            data, target = data.to(device), target.to(device)
 
+            # 前馈
             # 自动混合精度
             with autocast(device_type):
-                # 前馈
                 output = model(data)
                 test_loss += criterion(output, target).item()
 
@@ -146,7 +165,7 @@ def test():
     acc = 100.0 * correct / len(test_loader.dataset)
 
     print(
-        f"\nTest set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({acc:.0f}%)\n"
+        f"Test: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({acc:.0f}%)"
     )
 
     return test_loss, acc
@@ -167,8 +186,13 @@ def pipeline(start_epoch=0):
     global best_epoch, best_loss, best_acc
 
     for epoch in range(start_epoch, 1000):
+        starting = time.time()
+
         train(epoch)
         loss, acc = test()
+
+        cost = int(time.time() - starting)
+        print(f"Epoch: {epoch}, Cost: {cost}s\n")
 
         # torch.save(model, output_dir / f"{model_name}_{epoch}.pt")
 
@@ -183,9 +207,13 @@ def pipeline(start_epoch=0):
         best_loss = loss
         best_acc = acc
         print(
-            f"====== New best is {best_epoch}, Loss: {best_loss:.8f}, Acc: {best_acc:.4f} ======"
+            f"====== New best is epoch {best_epoch}, Loss: {best_loss:.8f}, Accuracy: {best_acc:.4f} ======\n"
         )
-        torch.save(model, best_model_path)
+        torch.save(model, output_dir / f"{model_name}_{epoch}.pt")
+        torch.save(model, output_dir / f"{model_name}_best.pt")
 
+
+if use_cuda:
+    torch.cuda.empty_cache()
 
 pipeline()
