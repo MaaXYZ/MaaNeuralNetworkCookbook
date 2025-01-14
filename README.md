@@ -7,4 +7,4 @@
 
 - [x] NeuralNetworkClassify
 - [ ] NeuralNetworkDetect
-- [ ] OCR
+- [x] OCR
