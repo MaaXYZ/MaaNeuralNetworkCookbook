@@ -47,7 +47,7 @@ pip install -r ./requirements.txt
 python ./download.py
 ```
 
-## 起锅开火
+## 开始烹饪
 
  打开 `train.py`，**根据实际情况修改前面几项大写的变量值**，然后再运行：
 

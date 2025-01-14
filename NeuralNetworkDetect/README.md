@@ -37,9 +37,7 @@ pip install -r ./requirements.txt
 
 TODO
 
-## 起锅开火
-
-开始训练
+## 开始烹饪
 
 ```bash
 python ./train.py
