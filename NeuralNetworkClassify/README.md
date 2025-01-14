@@ -75,4 +75,4 @@ Loss 表示损失，期望尽可能低；Acc 表示准确率，期望尽可能�
 python ./export.py
 ```
 
-最终得到 onnx 格式的模型文件：`data/model/GoogleNet_best.onnx`，即是我们 [MaaFW Pipeline](https://github.com/MaaXYZ/MaaFramework/blob/main/docs/zh_cn/3.1-%E4%BB%BB%E5%8A%A1%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%8D%8F%E8%AE%AE.md#neuralnetworkclassify) 所需要的模型文件，复制仅文件夹并继续编辑 Pipeline 即可。
+最终得到 onnx 格式的模型文件：`data/model/GoogleNet_best.onnx`，即是我们 [MaaFW Pipeline](https://github.com/MaaXYZ/MaaFramework/blob/main/docs/zh_cn/3.1-%E4%BB%BB%E5%8A%A1%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%8D%8F%E8%AE%AE.md#neuralnetworkclassify) 所需要的模型文件。
