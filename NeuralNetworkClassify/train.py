@@ -36,9 +36,7 @@ class MyDataset(Dataset):
 
         self.transform = transforms.Compose(
             [
-                transforms.GaussianBlur(
-                    3, sigma=(0.1, 2.0)
-                ),  # 高斯模糊，卷积核的大小为3x3，水平和垂直方向上的标准偏差分别为 0.1 和 2.0
+                transforms.GaussianBlur(3, sigma=(0.1, 2.0)),  # 高斯模糊
                 transforms.RandomPosterize(3),  # 随机压缩
                 transforms.RandomAdjustSharpness(3),  # 随机锐化
                 transforms.RandomAutocontrast(),  # 自动对比度调整
