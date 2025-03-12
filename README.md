@@ -6,5 +6,5 @@
 更新计划：
 
 - [x] NeuralNetworkClassify
-- [ ] NeuralNetworkDetect
+- [x] NeuralNetworkDetect
 - [x] OCR
