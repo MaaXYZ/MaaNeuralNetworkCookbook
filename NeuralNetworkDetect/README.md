@@ -50,7 +50,9 @@ pip install -r ./requirements.txt
 
 图片的分辨率不需要全都一样（一样最好），图片中除了目标也应当包含一些背景信息，这有助于提升模型的鲁棒性，如下所示
 
-![image-20250311143632840](https://img.ravi.top/img/48c0511cac8d25e1071b17a823bf317b.png)![image-20250311143945576](https://img.ravi.top/img/12cb1190cd163fc65c62165ecc194859.png)
+![image](https://github.com/user-attachments/assets/c202b058-7c70-44ca-8a78-929792dd6bfe)
+![image](https://github.com/user-attachments/assets/48a2d313-0498-4867-a4ac-d202f983cc12)
+
 
 ### 食材调味
 
@@ -60,27 +62,33 @@ pip install -r ./requirements.txt
 
 注册登录之后，点击 `NewProject`
 
-![image-20250311150240483](https://img.ravi.top/img/f2fd050161e79d7fdc3659cab6e58ee1.png)
+![image](https://github.com/user-attachments/assets/29910c38-6ddf-4f48-b305-fd3e5b90920e)
+
 
 然后上传图片，也就是数据集
 
-![image-20250311150643405](https://img.ravi.top/img/3f62fc40e2462ce516f258e2c5dd3d73.png)
+![image](https://github.com/user-attachments/assets/d5cc5ff2-0005-4983-8b6a-048c0487cfe5)
 
-![image-20250311150802290](https://img.ravi.top/img/6aa51620d427b32516b2ed24565cc187.png)
+
+![image](https://github.com/user-attachments/assets/e644c156-5e14-41e6-987e-8ed698c889d5)
+
 
 上传完成后点击 `Start Manual Labeling` ，选择 `Assign to myself`，再点击 `Start Annotating` 开始标注
 
-![image-20250311151543822](https://img.ravi.top/img/64e8d062842ad8fab2e2d880ab697806.png)
+![image](https://github.com/user-attachments/assets/d9151b3c-555a-4d7b-83d1-0ad905c149e6)
+
 
 全部标注完成后返回，点击 `Add images to Dataset`
 
 再进入左侧的 `Versions`，点击 `Rebalance` 调整数据集的比例，一般建议为 7:3:1
 
-![image-20250311152009121](https://img.ravi.top/img/1517013eb27003e981e74f8cdb6517bd.png)
+![image](https://github.com/user-attachments/assets/6b6acbb4-d260-4b0c-86f6-f7b48bad1583)
+
 
 然后在 Preprocessing 中，将除了 `Auto-Orient` 的其他选项都删掉，Augmentation 不用动，最后点击 `Create` 即可
 
-![image-20250311152559800](https://img.ravi.top/img/320ae0e4a5a9a9ea4d7bd8653f6b303b.png)
+![image](https://github.com/user-attachments/assets/6feecc7e-661c-4e5f-8f6e-d3c11b1f4c85)
+
 
 稍等一会就下载好了
 
@@ -117,13 +125,15 @@ yolo detect train data=./dataset/data.yaml model=yolo11n.pt epochs=500 imgsz=640
 
 对于这两张图，简单而言，曲线越靠近右上角说明训练效果越好
 
-![image-20250311172441872](https://img.ravi.top/img/ccb823e40614a1f883701429f694b390.png)
+![image](https://github.com/user-attachments/assets/d0f4731a-0ec7-4877-823c-f41cf56f2d39)
+
 
 如上图所示，`video_small` 这一类的训练效果就相对较差
 
 图中标签后的小数为 mAP50 分数，您可以简单地理解为检测的准确率，即该值越大越好
 
-![image-20250311192410125](https://img.ravi.top/img/2e35b54512a23ae9cefacbb62b31aa2b.png)
+![image](https://github.com/user-attachments/assets/10975bd0-7936-48c4-aedc-62ae424610a1)
+
 
 F1是对准确率和召回率的调和平均数，您可以通过该图决定置信度（Confidence）阈值设置为多少比较合适
 
