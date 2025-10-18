@@ -157,7 +157,7 @@ yolo export model=best.pt format=onnx imgsz=320,640
 
 更多参数参见 [arguments](https://docs.ultralytics.com/modes/export/#arguments)
 
-**注意：imgsz 需要符合在 pipeline 中设置的 ROI 大小**
+**注意：imgsz 需要与前面训练时设置的尺寸一致**
 
 ## 改进配方
 
