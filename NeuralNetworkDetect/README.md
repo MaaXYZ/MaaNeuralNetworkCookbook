@@ -146,7 +146,7 @@ F1是对准确率和召回率的调和平均数，您可以通过该图决定置
 进入 weight 文件夹，导出 ONNX 模型
 
 ```bash
-yolo export model=best.pt format=onnx imgsz=320,640
+yolo export model=best.pt format=onnx imgsz=640
 ```
 
 参数解释:
@@ -157,7 +157,6 @@ yolo export model=best.pt format=onnx imgsz=320,640
 
 更多参数参见 [arguments](https://docs.ultralytics.com/modes/export/#arguments)
 
-**注意：imgsz 需要与前面训练时设置的尺寸一致**
 
 ## 改进配方
 
