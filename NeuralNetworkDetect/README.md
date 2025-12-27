@@ -80,7 +80,7 @@ pip install -r ./requirements.txt
 
 全部标注完成后返回，点击 `Add images to Dataset`
 
-再进入左侧的 `Versions`，点击 `Rebalance` 调整数据集的比例，一般建议为 7:3:1
+再进入左侧的 `Versions`，点击 `Rebalance` 调整数据集的比例，一般建议为 7:2:1
 
 ![image](https://github.com/user-attachments/assets/6b6acbb4-d260-4b0c-86f6-f7b48bad1583)
 
@@ -97,7 +97,7 @@ pip install -r ./requirements.txt
 将前文中下载的压缩包解压到dataset文件夹
 
 ```bash
-yolo detect train data=./dataset/data.yaml model=yolo11n.pt epochs=500 imgsz=640 batch=0.8 cos_lr=True patience=100
+yolo detect train data=./dataset/data.yaml model=yolo11n.pt epochs=500 imgsz=640 batch=-1 cos_lr=True patience=100
 ```
 
 参数解释：
@@ -146,7 +146,7 @@ F1是对准确率和召回率的调和平均数，您可以通过该图决定置
 进入 weight 文件夹，导出 ONNX 模型
 
 ```bash
-yolo export model=best.pt format=onnx imgsz=640
+yolo export model=best.pt format=onnx imgsz=640 opset=17
 ```
 
 参数解释:
