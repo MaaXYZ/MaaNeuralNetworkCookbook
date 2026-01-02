@@ -21,7 +21,7 @@ MaaFW 使用 YOLO 标准的输入输出格式，若您有 YOLO 训练经验，�
 如果你有一块 Nvidia GPU
 
 ```bash
-# CUDA
+# CUDA 11.8版本
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 ```
 
@@ -32,7 +32,7 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install torch torchvision
 ```
 
-更多其他版本请参考 [PyTorch 官网](https://pytorch.org/get-started/locally/)。
+更多其他版本请参考 [PyTorch 官网](https://pytorch.org/get-started/locally/)，特别是50系之后的Blackwell架构，至少使用12.8版本。
 
 finally, 安装其他依赖：
 
@@ -111,8 +111,11 @@ yolo detect train data=./dataset/data.yaml model=yolo11n.pt epochs=500 imgsz=640
   **注意：模型规模越大，最后导出的 onnx 模型也越大，其大小约为预训练模型的 2 ~ 3 倍**
 
 - epochs: 训练轮次，可以适当调大些
+
 - patience: 在多少轮训练之后，如果mA等指标无明显提升则提前中止训练
+
 - cos_lr: 使用余弦学习率调度器，可以有效提高模型的收敛效果
+
 - batch: 每次加载多少图片到显卡中，填写小数会根据显存自动决定，如 0.8 会占用 80% 的显存。多卡训练时不能填小数
 
 更多参数参见 [train-settings](https://docs.ultralytics.com/modes/train/#train-settings)
