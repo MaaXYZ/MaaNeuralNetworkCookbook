@@ -16,25 +16,32 @@ MaaFW 使用 YOLO 标准的输入输出格式，若您有 YOLO 训练经验，�
 
 ## 准备炊具
 
-*相较分类，训练检测模型对设备性能要求较高，虽然理论上 CPU 也能跑，但还是非常推荐你有一块 Nvidia GPU。*
+*相较分类，训练检测模型对设备性能要求较高，虽然理论上 CPU 也能跑，但还是非常推荐使用独立显卡（NVIDIA CUDA 或 AMD ROCm）。*
 
-如果你有一块 Nvidia GPU
+### NVIDIA 显卡
 
 ```bash
 # CUDA
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 ```
 
-否则
+更多版本请参考 [PyTorch 官网](https://pytorch.org/get-started/locally/)。
+
+### AMD 显卡（Windows + ROCm）
+
+在 Windows 上可使用 AMD 官方 ROCm PyTorch（如 RX 6000/7000/9000 系列）。需 **Python 3.12** 与较新的 AMD 驱动；部分型号（如 **RX 6700 XT**）还需额外安装对应架构的 PyTorch 包，详见部署文档。
+
+**环境部署：👉 [AMD ROCm 环境部署（Windows）](./AMD_ROCm_Setup.md)**
+
+部署完成后，训练、验证、导出步骤与 NVIDIA / CPU **完全相同**，见下文「开始烹饪」「出锅装盘」。
+
+### CPU（无独显或仅作测试）
 
 ```bash
-# CPU
 pip install torch torchvision
 ```
 
-更多其他版本请参考 [PyTorch 官网](https://pytorch.org/get-started/locally/)。
-
-finally, 安装其他依赖：
+### 安装其他依赖
 
 ```bash
 pip install -r ./requirements.txt
