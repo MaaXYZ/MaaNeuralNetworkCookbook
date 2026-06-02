@@ -38,6 +38,19 @@ Windows 上可使用 [AMD 官方 ROCm PyTorch](https://rocm.docs.amd.com/project
 
 **前置要求：** Windows 11（推荐 22H2+）、[AMD 显卡驱动](https://www.amd.com/en/support/download/drivers.html)（建议 26.1.1+）、[Miniconda](https://docs.conda.io/en/latest/miniconda.html) / Anaconda、Python **3.12**。
 
+#### 版本说明与更新
+
+下文命令中的 ROCm / PyTorch **版本号与下载路径为示例**（撰写时对应 ROCm **7.2**、`torch 2.9.1+rocmsdk20260116`、Python **cp312**）。AMD 会随驱动与 ROCm 发布更新 wheel，**过期链接可能 404**，请以官方当前文档与目录为准，勿混用不同 ROCm 大版本的 SDK 与 torch 包。
+
+**如何查找可用的新版本：**
+
+1. **优先看官方安装页**（通常与当前 ROCm 大版本同步）：[Windows 上通过 pip 安装 PyTorch](https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/install/installrad/windows/install-pytorch.html) — 复制页面中的 `pip install` 完整 URL，并确认要求的显卡驱动版本。
+2. **浏览 AMD 制品库目录**：打开 [repo.radeon.com/rocm/windows/](https://repo.radeon.com/rocm/windows/)，进入与文档一致的发布目录（如 `rocm-rel-7.2/` 或带后缀的 `.rocm-rel-7.2_a/`），核对文件名中的 `rocm_sdk_*`、`torch-*+rocmsdk*`、`cp312` 是否与本地 Python 一致。
+3. **gfx1031 等特殊架构**：若标准目录下的 torch 无法初始化 GPU，再查 [ROCm nightlies 多架构索引](https://rocm.nightlies.amd.com/whl-staging-multi-arch/) 或官方 issue，使用带 `device-gfx1031` 等 extra 的包；其 ROCm 版本号可能与 `rocm-rel-7.2` 不同，**整套 SDK 与 torch 须来自同一套说明**，避免混搭。
+4. **安装顺序**：ROCm SDK（`rocm_sdk_*` → `rocm`）→ `torch` / `torchvision`（及可选 `torchaudio`）→ `pip install -r requirements.txt`（仅含 `ultralytics`、`onnx`，见仓库内 `requirements.txt` 注释）。
+
+升级后建议执行「验证环境」中的命令；若 Ultralytics 报错，可查阅其文档对 PyTorch 最低版本的要求后再调整 torch。
+
 #### 1. 创建 Conda 环境
 
 ```powershell
