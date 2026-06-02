@@ -29,11 +29,84 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 
 ### AMD 显卡（Windows + ROCm）
 
-在 Windows 上可使用 AMD 官方 ROCm PyTorch（如 RX 6000/7000/9000 系列）。需 **Python 3.12** 与较新的 AMD 驱动；部分型号（如 **RX 6700 XT**）还需额外安装对应架构的 PyTorch 包，详见部署文档。
+Windows 上可使用 [AMD 官方 ROCm PyTorch](https://rocm.docs.amd.com/projects/radeon-ryzen/en/docs-7.2/docs/install/installrad/windows/install-pytorch.html)（如 RX 6000/7000/9000）。需 **Python 3.12** 与较新驱动；**训练、验证、导出与 NVIDIA / CPU 相同**，见下文「开始烹饪」「出锅装盘」。
 
-**环境部署：👉 [AMD ROCm 环境部署（Windows）](./AMD_ROCm_Setup.md)**
+<details>
+<summary><b>ROCm 环境部署（Windows）</b> — 点击展开</summary>
 
-部署完成后，训练、验证、导出步骤与 NVIDIA / CPU **完全相同**，见下文「开始烹饪」「出锅装盘」。
+适用显卡见 [ROCm Windows 支持列表](https://rocm.docs.amd.com/projects/install-on-windows/en/latest/reference/system-requirements.html)。
+
+**前置要求：** Windows 11（推荐 22H2+）、[AMD 显卡驱动](https://www.amd.com/en/support/download/drivers.html)（建议 26.1.1+）、[Miniconda](https://docs.conda.io/en/latest/miniconda.html) / Anaconda、Python **3.12**。
+
+#### 1. 创建 Conda 环境
+
+```powershell
+conda create -n yolov8-maa python=3.12 -y
+conda activate yolov8-maa
+```
+
+环境名可自定。
+
+#### 2. 安装 ROCm SDK
+
+按顺序安装（体积较大，需耐心等待）：
+
+```powershell
+$base = "https://repo.radeon.com/rocm/windows/.rocm-rel-7.2_a"
+
+python -m pip install --no-cache-dir "$base/rocm_sdk_core-7.2.0.dev0-py3-none-win_amd64.whl"
+python -m pip install --no-cache-dir "$base/rocm_sdk_devel-7.2.0.dev0-py3-none-win_amd64.whl"
+python -m pip install --no-cache-dir "$base/rocm_sdk_libraries_custom-7.2.0.dev0-py3-none-win_amd64.whl"
+python -m pip install --no-cache-dir "$base/rocm-7.2.0.dev0.tar.gz"
+```
+
+也可使用 `https://repo.radeon.com/rocm/windows/rocm-rel-7.2/`，包名相同。
+
+#### 3. 安装 PyTorch（ROCm）
+
+**RX 7900 / 6800 等（通用）：**
+
+```powershell
+$base = "https://repo.radeon.com/rocm/windows/rocm-rel-7.2"
+
+python -m pip install --no-cache-dir "$base/torch-2.9.1%2Brocmsdk20260116-cp312-cp312-win_amd64.whl"
+python -m pip install --no-cache-dir "$base/torchvision-0.24.1%2Brocmsdk20260116-cp312-cp312-win_amd64.whl"
+python -m pip install --no-cache-dir "$base/torchaudio-2.9.1%2Brocmsdk20260116-cp312-cp312-win_amd64.whl"
+```
+
+`torchaudio` 对 YOLO 非必需，可跳过。
+
+<details>
+<summary><b>RX 6700 XT / 6750 XT（gfx1031）</b> — 标准包可能无法初始化 GPU，点击展开</summary>
+
+```powershell
+python -m pip uninstall -y torch torchvision
+
+python -m pip install --no-cache-dir `
+  --index-url https://rocm.nightlies.amd.com/whl-staging-multi-arch/ `
+  "torch[device-gfx1031]" "torchvision[device-gfx1031]"
+```
+
+可用 `offload-arch`（conda 环境 `Scripts` 目录）确认架构，例如输出 `gfx1031`。
+
+</details>
+
+#### 4. 验证环境
+
+```powershell
+python -c "import torch; print(torch.__version__); print('GPU:', torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'N/A')"
+```
+
+输出 `GPU: True` 且能打印显卡名称即可。然后继续执行下文「安装其他依赖」。
+
+#### 常见问题
+
+| 现象 | 处理 |
+|------|------|
+| `torch.cuda.is_available()` 崩溃 | gfx1031 见上一小节；多显卡可设 `$env:HIP_VISIBLE_DEVICES=0` |
+| MIOpen / xnack 警告 | 一般可忽略 |
+
+</details>
 
 ### CPU（无独显或仅作测试）
 
