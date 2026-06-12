@@ -112,7 +112,7 @@ yolo detect train data=./dataset/data.yaml model=yolo11n.pt epochs=500 imgsz=640
 
 - epochs: 训练轮次，可以适当调大些
 
-- patience: 在多少轮训练之后，如果mA等指标无明显提升则提前中止训练
+- patience: 在多少轮训练之后，如果 mAP 等指标无明显提升则提前中止训练
 
 - cos_lr: 使用余弦学习率调度器，可以有效提高模型的收敛效果
 
